@@ -25,7 +25,7 @@ inline auto skip_plus_signs(std::string_view &num) noexcept -> void {
     }
 }
 
-inline auto validate_number(std::string_view num) -> void {
+inline auto validate(std::string_view num) -> void {
     if (num.empty()) {
         throw std::invalid_argument("Number is empty");
     }
@@ -147,8 +147,8 @@ inline auto unsigned_divide(std::string_view a, std::string_view b)
 } // namespace detail
 
 inline auto add(std::string_view a, std::string_view b) -> std::string {
-    detail::validate_number(a);
-    detail::validate_number(b);
+    detail::validate(a);
+    detail::validate(b);
 
     detail::skip_plus_signs(a);
     detail::skip_plus_signs(b);
@@ -190,8 +190,8 @@ inline auto add(std::string_view a, std::string_view b) -> std::string {
 }
 
 inline auto subtract(std::string_view a, std::string_view b) -> std::string {
-    detail::validate_number(a);
-    detail::validate_number(b);
+    detail::validate(a);
+    detail::validate(b);
 
     detail::skip_plus_signs(a);
     detail::skip_plus_signs(b);
@@ -249,8 +249,8 @@ inline auto subtract(std::string_view a, std::string_view b) -> std::string {
 }
 
 inline auto multiply(std::string_view a, std::string_view b) -> std::string {
-    detail::validate_number(a);
-    detail::validate_number(b);
+    detail::validate(a);
+    detail::validate(b);
 
     detail::skip_plus_signs(a);
     detail::skip_plus_signs(b);
@@ -308,8 +308,8 @@ inline auto multiply(std::string_view a, std::string_view b) -> std::string {
 
 inline auto divide(std::string_view a, std::string_view b)
     -> std::pair<std::string, std::string> {
-    detail::validate_number(a);
-    detail::validate_number(b);
+    detail::validate(a);
+    detail::validate(b);
 
     detail::skip_plus_signs(a);
     detail::skip_plus_signs(b);
