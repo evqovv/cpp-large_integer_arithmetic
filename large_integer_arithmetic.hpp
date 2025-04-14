@@ -4,7 +4,6 @@
 #include <string>
 #include <string_view>
 #include <vector>
-#include <iterator>
 
 namespace evqovv {
 namespace large_integer_arithmetic {
