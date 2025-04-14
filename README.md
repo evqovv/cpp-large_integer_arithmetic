@@ -4,7 +4,7 @@ A lightweight C++ header-only library for performing basic arithmetic operations
 
 ## Features  
 -  Handles arbitrarily large integers (limited only by memory)  
-- Supports ``+``, ``-``, ``*``, and ``/``  
+- Supports addition, subtraction, multiplication, and division  
 - Accepts numbers as ``std::string_view``  
 - Strict validation of input format  
 - No external dependencies, fully header-only  
