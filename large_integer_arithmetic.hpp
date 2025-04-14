@@ -11,7 +11,11 @@ inline auto subtract(std::string_view a, std::string_view b) -> std::string;
 
 namespace detail {
 inline auto trim_leading_zeros(std::string_view num) -> std::string {
-    num.remove_prefix(num.find_first_not_of('0'));
+    auto const pos = num.find_first_not_of('0');
+    if (pos == std::string_view::npos) {
+        return "0";
+    }
+    num.remove_prefix(pos);
     return std::string(num);
 }
 
@@ -181,6 +185,7 @@ inline auto add(std::string_view a, std::string_view b) -> std::string {
     }
 
     std::reverse(result.begin(), result.end());
+
     return result;
 }
 
