@@ -14,7 +14,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(GTEST_ROOT $ENV{HOME}/gtest)
 link_directories(${GTEST_ROOT}/lib)
 
-add_executable(large_integer_arithmetic "test.cpp")
+add_executable(large_integer_arithmetic test.cpp)
 
 target_link_libraries(large_integer_arithmetic gtest gtest_main)
 
