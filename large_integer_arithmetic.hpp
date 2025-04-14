@@ -86,7 +86,28 @@ inline auto multiply_single_digit(std::string_view num, int factor)
     return result;
 }
 
-inline auto divide_unsigned(std::string_view a, std::string_view b)
+inline auto find_best_multiplier(std::string_view cur_dividend,
+                                 std::string_view divisor)
+    -> std::pair<int, std::string> {
+    int low = 1;
+    int high = 9;
+    int best_quotient = 0;
+    std::string best_product;
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        auto temp = multiply_single_digit(divisor, mid);
+        if (is_great_than_or_equal_to(cur_dividend, temp)) {
+            best_quotient = mid;
+            best_product = std::move(temp);
+            low = mid + 1;
+        } else {
+            high = mid - 1;
+        }
+    }
+    return {best_quotient, best_product};
+}
+
+inline auto unsigned_divide(std::string_view a, std::string_view b)
     -> std::pair<std::string, std::string> {
     if (is_less_than(a, b)) {
         return {"0", std::string(a)};
@@ -109,17 +130,10 @@ inline auto divide_unsigned(std::string_view a, std::string_view b)
             continue;
         }
 
-        int possible_quotient = 9;
-        std::string temp;
-        for (; possible_quotient >= 1; --possible_quotient) {
-            temp = multiply_single_digit(b, possible_quotient);
-            if (is_great_than_or_equal_to(cur_dividend, temp)) {
-                break;
-            }
-        }
-
-        quotient.push_back(possible_quotient + '0');
-        cur_dividend = subtract(cur_dividend, temp);
+        auto [best_quotient, best_product] =
+            find_best_multiplier(cur_dividend, std::string(b));
+        quotient.push_back(best_quotient + '0');
+        cur_dividend = subtract(cur_dividend, best_product);
     }
 
     std::string remainder = cur_dividend == "0" ? "0" : cur_dividend;
@@ -309,7 +323,7 @@ inline auto divide(std::string_view a, std::string_view b)
     }
 
     auto [qutoient_abs, remainder_abs] =
-        detail::divide_unsigned(dividend_abs, divisor_abs);
+        detail::unsigned_divide(dividend_abs, divisor_abs);
 
     if (dividend_negative && remainder_abs != "0") {
         qutoient_abs = add(qutoient_abs, "1");
