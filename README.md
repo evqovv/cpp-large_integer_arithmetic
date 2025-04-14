@@ -10,7 +10,7 @@ A lightweight C++ header-only library for performing basic arithmetic operations
 - No external dependencies, fully header-only  
 
 ## Usage  
-### Dependency setting
+### Dependency Setting
 ```cpp
 #include "large_integer_arithmetic.hpp"
 ```  
