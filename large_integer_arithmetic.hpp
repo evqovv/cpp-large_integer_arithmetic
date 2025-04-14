@@ -34,14 +34,14 @@ inline auto validate_number(std::string_view num) -> void {
         throw std::invalid_argument("Number has sign but no digits");
     }
 
+    if (num.size() > 1 && num[0] == '0') {
+        throw std::invalid_argument("Number has invalid leading zero");
+    }
+
     for (auto &&c : num) {
         if (c < '0' || c > '9') {
             throw std::invalid_argument("Number contains non-digit character");
         }
-    }
-
-    if (num.size() > 1 && num[0] == '0') {
-        throw std::invalid_argument("Number has invalid leading zero");
     }
 }
 
