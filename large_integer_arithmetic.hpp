@@ -7,13 +7,18 @@
 
 namespace evqovv {
 namespace large_integer_arithmetic {
-
 inline auto subtract(std::string_view a, std::string_view b) -> std::string;
 
 namespace detail {
 inline auto trim_leading_zeros(std::string_view num) -> std::string {
     num.remove_prefix(num.find_first_not_of('0'));
     return std::string(num);
+}
+
+inline auto skip_plus_signs(std::string_view &num) noexcept -> void {
+    if (num[0] == '+') {
+        num.remove_prefix(1);
+    }
 }
 
 inline auto validate_number(std::string_view num) -> void {
@@ -112,7 +117,7 @@ inline auto divide_unsigned(std::string_view a, std::string_view b)
                 break;
             }
         }
-        
+
         quotient.push_back(possible_quotient + '0');
         cur_dividend = subtract(cur_dividend, temp);
     }
@@ -127,13 +132,8 @@ inline auto add(std::string_view a, std::string_view b) -> std::string {
     detail::validate_number(a);
     detail::validate_number(b);
 
-    if (a[0] == '+') {
-        a.remove_prefix(1);
-    }
-
-    if (b[0] == '+') {
-        b.remove_prefix(1);
-    }
+    detail::skip_plus_signs(a);
+    detail::skip_plus_signs(b);
 
     if (a[0] == '-' && b[0] != '-') {
         a.remove_prefix(1);
@@ -174,13 +174,8 @@ inline auto subtract(std::string_view a, std::string_view b) -> std::string {
     detail::validate_number(a);
     detail::validate_number(b);
 
-    if (a[0] == '+') {
-        a.remove_prefix(1);
-    }
-
-    if (b[0] == '+') {
-        b.remove_prefix(1);
-    }
+    detail::skip_plus_signs(a);
+    detail::skip_plus_signs(b);
 
     if (a == b) {
         return "0";
@@ -238,13 +233,8 @@ inline auto multiply(std::string_view a, std::string_view b) -> std::string {
     detail::validate_number(a);
     detail::validate_number(b);
 
-    if (a[0] == '+') {
-        a.remove_prefix(1);
-    }
-
-    if (b[0] == '+') {
-        b.remove_prefix(1);
-    }
+    detail::skip_plus_signs(a);
+    detail::skip_plus_signs(b);
 
     if (a == "0" || a == "-0" || b == "0" || b == "-0") {
         return "0";
@@ -302,12 +292,8 @@ inline auto divide(std::string_view a, std::string_view b)
     detail::validate_number(a);
     detail::validate_number(b);
 
-    if (a[0] == '+') {
-        a.remove_prefix(1);
-    }
-    if (b[0] == '+') {
-        b.remove_prefix(1);
-    }
+    detail::skip_plus_signs(a);
+    detail::skip_plus_signs(b);
 
     if (b == "0" || b == "-0") {
         throw std::invalid_argument("Division by zero");
