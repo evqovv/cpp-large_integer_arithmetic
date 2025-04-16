@@ -124,10 +124,6 @@ inline auto unsigned_divide(std::string_view a, std::string_view b)
     while (it != a.cend()) {
         cur_dividend.push_back(*it++);
 
-        if (cur_dividend.size() == 1 && cur_dividend[0] == '0') {
-            cur_dividend.clear();
-        }
-
         if (is_less_than(cur_dividend, b)) {
             if (!quotient.empty()) {
                 quotient.push_back('0');
