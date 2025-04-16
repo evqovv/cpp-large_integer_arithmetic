@@ -10,39 +10,39 @@ namespace large_integer_arithmetic {
 inline auto subtract(std::string_view a, std::string_view b) -> std::string;
 
 namespace detail {
-inline auto trim_leading_zeros(std::string_view num) -> std::string {
-    auto const pos = num.find_first_not_of('0');
+inline auto trim_leading_zeros(std::string_view number) -> std::string {
+    auto const pos = number.find_first_not_of('0');
     if (pos == std::string_view::npos) {
         return "0";
     }
-    num.remove_prefix(pos);
-    return std::string(num);
+    number.remove_prefix(pos);
+    return std::string(number);
 }
 
-inline auto skip_plus_signs(std::string_view &num) noexcept -> void {
-    if (num[0] == '+') {
-        num.remove_prefix(1);
+inline auto skip_plus_signs(std::string_view &number) noexcept -> void {
+    if (number[0] == '+') {
+        number.remove_prefix(1);
     }
 }
 
-inline auto validate(std::string_view num) -> void {
-    if (num.empty()) {
+inline auto validate(std::string_view number) -> void {
+    if (number.empty()) {
         throw std::invalid_argument("Number is empty");
     }
 
-    if (num[0] == '+' || num[0] == '-') {
-        num.remove_prefix(1);
+    if (number[0] == '+' || number[0] == '-') {
+        number.remove_prefix(1);
     }
 
-    if (num.empty()) {
+    if (number.empty()) {
         throw std::invalid_argument("Number has sign but no digits");
     }
 
-    if (num.size() > 1 && num[0] == '0') {
+    if (number.size() > 1 && number[0] == '0') {
         throw std::invalid_argument("Number has invalid leading zero");
     }
 
-    for (auto &&c : num) {
+    for (auto &&c : number) {
         if (c < '0' || c > '9') {
             throw std::invalid_argument("Number contains non-digit character");
         }
@@ -69,12 +69,12 @@ inline auto is_less_than(std::string_view a, std::string_view b) noexcept
     return !is_great_than_or_equal_to(a, b);
 }
 
-inline auto multiply_single_digit(std::string_view num, int factor)
+inline auto multiply_single_digit(std::string_view number, int factor)
     -> std::string {
     std::string result;
 
     int carry = 0;
-    for (auto it = num.crbegin(); it != num.crend(); ++it) {
+    for (auto it = number.crbegin(); it != number.crend(); ++it) {
         int digit = *it - '0';
         int product = digit * factor + carry;
         result.push_back(product % 10 + '0');
@@ -119,6 +119,7 @@ inline auto unsigned_divide(std::string_view a, std::string_view b)
 
     std::string cur_dividend;
     std::string quotient;
+
     auto it = a.cbegin();
     while (it != a.cend()) {
         cur_dividend.push_back(*it++);
