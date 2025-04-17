@@ -170,11 +170,11 @@ inline auto add(std::string_view a, std::string_view b) -> std::string {
     result.reserve(std::max(a.size(), b.size()) + 1);
 
     int carry = 0;
-    auto pos1 = a.cend() - 1;
-    auto pos2 = b.cend() - 1;
-    while (pos1 >= a.cbegin() || pos2 >= b.cbegin() || carry > 0) {
-        int digit1 = pos1 >= a.cbegin() ? *pos1-- - '0' : 0;
-        int digit2 = pos2 >= b.cbegin() ? *pos2-- - '0' : 0;
+    auto pos1 = a.crbegin();
+    auto pos2 = b.crbegin();
+    while (pos1 != a.crend() || pos2 != b.crend() || carry > 0) {
+        int digit1 = pos1 != a.crend() ? *pos1++ - '0' : 0;
+        int digit2 = pos2 != b.crend() ? *pos2++ - '0' : 0;
 
         int sum = digit1 + digit2 + carry;
         carry = sum / 10;
@@ -222,11 +222,11 @@ inline auto subtract(std::string_view a, std::string_view b) -> std::string {
     std::string result;
 
     int borrow = 0;
-    auto pos1 = a.cend() - 1;
-    auto pos2 = b.cend() - 1;
-    while (pos1 >= a.cbegin() || pos2 >= b.cbegin()) {
-        int digit1 = pos1 >= a.cbegin() ? *pos1-- - '0' : 0;
-        int digit2 = pos2 >= b.cbegin() ? *pos2-- - '0' : 0;
+    auto pos1 = a.crbegin();
+    auto pos2 = b.crbegin();
+    while (pos1 != a.crend() || pos2 != b.crend()) {
+        int digit1 = pos1 != a.crend() ? *pos1++ - '0' : 0;
+        int digit2 = pos2 != b.crend() ? *pos2++ - '0' : 0;
 
         digit1 -= borrow;
         borrow = 0;
