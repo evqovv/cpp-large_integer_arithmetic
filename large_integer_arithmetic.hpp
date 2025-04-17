@@ -274,17 +274,19 @@ inline auto multiply(std::string_view a, std::string_view b) -> std::string {
     for (auto it1 = a.crbegin(); it1 != a.crend(); ++it1) {
         int digit1 = *it1 - '0';
         auto i = a.size() - (it1 - a.crbegin());
+
         for (auto it2 = b.crbegin(); it2 != b.crend(); ++it2) {
             int digit2 = *it2 - '0';
             int product = digit1 * digit2;
 
             auto j = b.size() - (it2 - b.crbegin());
-            int pos1 = i + j - 2;
-            int pos2 = i + j - 1;
 
-            int sum = product + temp[pos2];
-            temp[pos2] = sum % 10;
-            temp[pos1] += sum / 10;
+            int low = i + j - 2;
+            int high = i + j - 1;
+
+            int sum = product + temp[high];
+            temp[high] = sum % 10;
+            temp[low] += sum / 10;
         }
     }
 
