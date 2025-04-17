@@ -163,7 +163,7 @@ inline auto add(std::string_view a, std::string_view b) -> std::string {
     if (a[0] == '-' && b[0] == '-') {
         a.remove_prefix(1);
         b.remove_prefix(1);
-        return add(a, b).insert(0, "-");
+        return "-" + add(a, b);
     }
 
     std::string result;
