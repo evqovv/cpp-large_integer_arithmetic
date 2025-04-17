@@ -199,7 +199,7 @@ inline auto subtract(std::string_view a, std::string_view b) -> std::string {
 
     if (a[0] == '-' && b[0] != '-') {
         a.remove_prefix(1);
-        return add(a, b).insert(0, "-");
+        return "-" + add(a, b);
     }
 
     if (a[0] != '-' && b[0] == '-') {
@@ -220,10 +220,10 @@ inline auto subtract(std::string_view a, std::string_view b) -> std::string {
     }
 
     std::string result;
-    auto pos1 = a.cend() - 1;
-    auto pos2 = b.cend() - 1;
 
     int borrow = 0;
+    auto pos1 = a.cend() - 1;
+    auto pos2 = b.cend() - 1;
     while (pos1 >= a.cbegin() || pos2 >= b.cbegin()) {
         int digit1 = pos1 >= a.cbegin() ? *pos1-- - '0' : 0;
         int digit2 = pos2 >= b.cbegin() ? *pos2-- - '0' : 0;
