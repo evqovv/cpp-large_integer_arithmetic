@@ -168,10 +168,10 @@ inline auto add(std::string_view a, std::string_view b) -> std::string {
 
     std::string result;
     result.reserve(std::max(a.size(), b.size()) + 1);
-    auto pos1 = a.cend() - 1;
-    auto pos2 = b.cend() - 1;
 
     int carry = 0;
+    auto pos1 = a.cend() - 1;
+    auto pos2 = b.cend() - 1;
     while (pos1 >= a.cbegin() || pos2 >= b.cbegin() || carry > 0) {
         int digit1 = pos1 >= a.cbegin() ? *pos1-- - '0' : 0;
         int digit2 = pos2 >= b.cbegin() ? *pos2-- - '0' : 0;
