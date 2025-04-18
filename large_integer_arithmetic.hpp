@@ -4,9 +4,11 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#include <expected>
 
 namespace evqovv {
 namespace large_integer_arithmetic {
+inline auto add(std::string_view a, std::string_view b) -> std::string;
 inline auto subtract(std::string_view a, std::string_view b) -> std::string;
 
 namespace detail {
@@ -16,7 +18,7 @@ inline auto trim_leading_zeros(std::string_view number) -> std::string {
                                          : "0";
 }
 
-inline auto skip_plus_signs(std::string_view &number) noexcept -> void {
+inline auto ignore_plus_sign(std::string_view &number) noexcept -> void {
     if (number[0] == '+') {
         number.remove_prefix(1);
     }
@@ -66,7 +68,7 @@ inline auto is_less_than(std::string_view a, std::string_view b) noexcept
     return !is_great_than_or_equal_to(a, b);
 }
 
-inline auto multiply_single_digit(std::string_view number, int factor)
+inline auto multiply_with_single_digit(std::string_view number, int factor)
     -> std::string {
     std::string result;
 
@@ -87,7 +89,7 @@ inline auto multiply_single_digit(std::string_view number, int factor)
     return result;
 }
 
-inline auto find_best_multiplier(std::string_view cur_dividend,
+inline auto find_best_multiplier(std::string_view dividend,
                                  std::string_view divisor)
     -> std::pair<int, std::string> {
     int low = 1;
@@ -96,8 +98,8 @@ inline auto find_best_multiplier(std::string_view cur_dividend,
     std::string best_product;
     while (low <= high) {
         int mid = low + (high - low) / 2;
-        auto temp = multiply_single_digit(divisor, mid);
-        if (is_great_than_or_equal_to(cur_dividend, temp)) {
+        auto temp = multiply_with_single_digit(divisor, mid);
+        if (is_great_than_or_equal_to(dividend, temp)) {
             best_quotient = mid;
             best_product = std::move(temp);
             low = mid + 1;
@@ -108,7 +110,7 @@ inline auto find_best_multiplier(std::string_view cur_dividend,
     return {best_quotient, best_product};
 }
 
-inline auto unsigned_divide(std::string_view a, std::string_view b)
+inline auto perform_unsigned_division(std::string_view a, std::string_view b)
     -> std::pair<std::string, std::string> {
     if (is_less_than(a, b)) {
         return {"0", std::string(a)};
@@ -144,23 +146,23 @@ inline auto add(std::string_view a, std::string_view b) -> std::string {
     detail::validate(a);
     detail::validate(b);
 
-    detail::skip_plus_signs(a);
-    detail::skip_plus_signs(b);
+    detail::ignore_plus_sign(a);
+    detail::ignore_plus_sign(b);
 
     if (a[0] == '-' && b[0] != '-') {
         a.remove_prefix(1);
-        return subtract(b, a);
+        return {subtract(b, a)};
     }
 
     if (a[0] != '-' && b[0] == '-') {
         b.remove_prefix(1);
-        return subtract(a, b);
+        return {subtract(a, b)};
     }
 
     if (a[0] == '-' && b[0] == '-') {
         a.remove_prefix(1);
         b.remove_prefix(1);
-        return "-" + add(a, b);
+        return {"-" + add(a, b)};
     }
 
     std::string result;
@@ -187,8 +189,8 @@ inline auto subtract(std::string_view a, std::string_view b) -> std::string {
     detail::validate(a);
     detail::validate(b);
 
-    detail::skip_plus_signs(a);
-    detail::skip_plus_signs(b);
+    detail::ignore_plus_sign(a);
+    detail::ignore_plus_sign(b);
 
     if (a == b) {
         return "0";
@@ -246,8 +248,8 @@ inline auto multiply(std::string_view a, std::string_view b) -> std::string {
     detail::validate(a);
     detail::validate(b);
 
-    detail::skip_plus_signs(a);
-    detail::skip_plus_signs(b);
+    detail::ignore_plus_sign(a);
+    detail::ignore_plus_sign(b);
 
     if (a == "0" || a == "-0" || b == "0" || b == "-0") {
         return "0";
@@ -307,8 +309,8 @@ inline auto divide(std::string_view a, std::string_view b)
     detail::validate(a);
     detail::validate(b);
 
-    detail::skip_plus_signs(a);
-    detail::skip_plus_signs(b);
+    detail::ignore_plus_sign(a);
+    detail::ignore_plus_sign(b);
 
     if (b == "0" || b == "-0") {
         throw std::invalid_argument("Division by zero");
@@ -324,7 +326,7 @@ inline auto divide(std::string_view a, std::string_view b)
     }
 
     auto [quotient_abs, remainder_abs] =
-        detail::unsigned_divide(dividend_abs, divisor_abs);
+        detail::perform_unsigned_division(dividend_abs, divisor_abs);
 
     if (dividend_negative && remainder_abs != "0") {
         quotient_abs = add(quotient_abs, "1");
