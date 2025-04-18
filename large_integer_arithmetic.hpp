@@ -12,11 +12,8 @@ inline auto subtract(std::string_view a, std::string_view b) -> std::string;
 namespace detail {
 inline auto trim_leading_zeros(std::string_view number) -> std::string {
     auto const pos = number.find_first_not_of('0');
-    if (pos == std::string_view::npos) {
-        return "0";
-    }
-    number.remove_prefix(pos);
-    return std::string(number);
+    return pos != std::string_view::npos ? std::string(number.substr(pos))
+                                         : "0";
 }
 
 inline auto skip_plus_signs(std::string_view &number) noexcept -> void {
@@ -299,7 +296,7 @@ inline auto multiply(std::string_view a, std::string_view b) -> std::string {
 
     std::string result;
     std::transform(temp.begin(), temp.end(), std::back_inserter(result),
-                   [](auto &&x) { return '0' + x; });
+                   [](auto &&x) { return x + '0'; });
 
     return is_negative ? "-" + detail::trim_leading_zeros(result)
                        : detail::trim_leading_zeros(result);
@@ -326,18 +323,18 @@ inline auto divide(std::string_view a, std::string_view b)
         return {"0", "0"};
     }
 
-    auto [qutoient_abs, remainder_abs] =
+    auto [quotient_abs, remainder_abs] =
         detail::unsigned_divide(dividend_abs, divisor_abs);
 
     if (dividend_negative && remainder_abs != "0") {
-        qutoient_abs = add(qutoient_abs, "1");
+        quotient_abs = add(quotient_abs, "1");
         remainder_abs = subtract(divisor_abs, remainder_abs);
     }
 
     bool quotient_negative = (dividend_negative != divisor_negative);
-    std::string quotient = qutoient_abs;
-    if (quotient_negative && qutoient_abs != "0") {
-        quotient.insert(0, "-");
+    std::string quotient = quotient_abs;
+    if (quotient_negative && quotient_abs != "0") {
+        quotient = "-" + std::move(quotient);
     }
 
     return {quotient, remainder_abs};
