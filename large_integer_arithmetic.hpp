@@ -7,10 +7,13 @@
 
 namespace evqovv {
 namespace large_integer_arithmetic {
+
 inline auto add(std::string_view a, std::string_view b) -> std::string;
+
 inline auto subtract(std::string_view a, std::string_view b) -> std::string;
 
 namespace detail {
+
 inline auto trim_leading_zeros(std::string_view number) -> std::string {
     auto const pos = number.find_first_not_of('0');
     return pos != std::string_view::npos ? std::string(number.substr(pos))
@@ -139,6 +142,7 @@ inline auto perform_unsigned_division(std::string_view a, std::string_view b)
 
     return {quotient, remainder};
 }
+
 } // namespace detail
 
 inline auto add(std::string_view a, std::string_view b) -> std::string {
@@ -340,5 +344,7 @@ inline auto divide(std::string_view a, std::string_view b)
 
     return {quotient, remainder_abs};
 }
+
 } // namespace large_integer_arithmetic
+
 } // namespace evqovv
